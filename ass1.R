@@ -99,10 +99,24 @@ filled_data <- filled_data %>%
 # 2- Make a panel plot containing a time series plot (i.e. type = "l") of 
 # the 5-minute interval (x-axis) and the average number of steps taken, 
 # averaged across all weekday days or weekend days (y-axis)
-interval_per_weekday <- summarise(group_by(filled_data, weekday, interval), 
-                              avg_steps = mean(steps, na.rm = TRUE))
 
-plot(interval_per_weekday$interval, interval_per_weekday$avg_steps, type = "l",
-     main = "average weekdays activity", xlab = "5-minute interval",
-     ylab = "average number of steps per weekdays")
+interval_per_weekday_end <- group_by(filled_data, weekday, interval)
+interval_per_weekday <- filter(interval_per_weekday_end, weekday == "weekday")
+interval_per_weekday <- summarise(interval_per_weekday, avg_steps_weekdays = mean(steps, na.rm = TRUE))
 
+interval_per_weekend <- filter(interval_per_weekday_end, weekday == "weekend")
+interval_per_weekend <- summarise(interval_per_weekend, avg_steps_weekend = mean(steps, na.rm = TRUE))
+
+plot(interval_per_weekday$interval, interval_per_weekday$avg_steps_weekdays, type = "l",
+      main = "average weekdays activity",
+      xlab = "5-minute interval",
+     ylab = "average number of steps per weekday days", col = "blue")
+lines(interval_per_weekend$interval, interval_per_weekend$avg_steps_weekend, type = "l",
+      col = "green")
+legend("topright", 
+       legend = c("Weekday days", 
+                  "Weekend days"), 
+       col = c("blue", "green"), 
+       lwd = .75, 
+       cex = .75
+)
