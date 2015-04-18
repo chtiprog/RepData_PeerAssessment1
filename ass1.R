@@ -94,8 +94,15 @@ filled_data <- filled_data %>%
   mutate(weekday = replace(weekday, weekday == "sábado" | weekday == "domingo", "weekend"))
          
 filled_data <- filled_data %>%
-  mutate(weekday = replace(weekday, weekday != "sábado" | weekday != "domingo", "weekday"))
+  mutate(weekday = replace(weekday, weekday != "weekend", "weekday"))
 
 # 2- Make a panel plot containing a time series plot (i.e. type = "l") of 
 # the 5-minute interval (x-axis) and the average number of steps taken, 
 # averaged across all weekday days or weekend days (y-axis)
+interval_per_weekday <- summarise(group_by(filled_data, weekday, interval), 
+                              avg_steps = mean(steps, na.rm = TRUE))
+
+plot(interval_per_weekday$interval, interval_per_weekday$avg_steps, type = "l",
+     main = "average weekdays activity", xlab = "5-minute interval",
+     ylab = "average number of steps per weekdays")
+
