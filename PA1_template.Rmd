@@ -137,4 +137,19 @@ hist(filled_step_per_day$total_step, col = "blue", main = "Without NA",
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
+1- Create a new factor variable in the dataset with two levels – “weekday” 
+and “weekend” indicating whether a given date is a weekday or weekend day.
+
+
+```{r}
+filled_data["weekday"] <- weekdays(as.Date(filled_data$date))
+
+filled_data <- filled_data %>%
+  mutate(weekday = replace(weekday, weekday == "sábado" | weekday == "domingo", "weekend"))
+         
+filled_data <- filled_data %>%
+  mutate(weekday = replace(weekday, weekday != "sábado" | weekday != "domingo", "weekday"))
+```
+
+
 

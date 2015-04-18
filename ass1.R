@@ -88,7 +88,13 @@ hist(filled_step_per_day$total_step, col = "blue", main = "Without NA",
 # Using the new filled-in data set
 # 1- Create a new factor variable in the dataset with two levels – “weekday” 
 # and “weekend” indicating whether a given date is a weekday or weekend day.
+filled_data["weekday"] <- weekdays(as.Date(filled_data$date))
 
+filled_data <- filled_data %>%
+  mutate(weekday = replace(weekday, weekday == "sábado" | weekday == "domingo", "weekend"))
+         
+filled_data <- filled_data %>%
+  mutate(weekday = replace(weekday, weekday != "sábado" | weekday != "domingo", "weekday"))
 
 # 2- Make a panel plot containing a time series plot (i.e. type = "l") of 
 # the 5-minute interval (x-axis) and the average number of steps taken, 
